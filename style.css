@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg, #141e30, #243b55);
+  color: white;
+  text-align: center;
+}
+
+h1 {
+  color: gold;
+  margin-top: 20px;
+}
+
+.card {
+  width: 320px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px black;
+}
+
+.balance {
+  margin-bottom: 15px;
+}
+
+.slots {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.slot {
+  width: 70px;
+  height: 70px;
+  margin: 5px;
+  font-size: 35px;
+  background: black;
+  border: 2px solid gold;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.glow {
+  box-shadow: 0 0 20px gold;
+}
+
+input {
+  width: 80%;
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background: linear-gradient(45deg, gold, orange);
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#result {
+  margin-top: 15px;
+  font-size: 18px;
+}
