@@ -1,145 +1,191 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Casino Fixed</title>
+<title>77 Casino Game</title>
 
 <style>
 body {
-  font-family: Arial;
-  background: #0f1720;
+  margin: 0;
+  font-family: 'Segoe UI';
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
   text-align: center;
 }
 
-h1 { color: gold; }
-
-.tabs button {
-  padding: 10px;
-  margin: 5px;
-  background: gold;
-  border: none;
-  cursor: pointer;
+h1 {
+  color: gold;
+  margin-top: 20px;
 }
 
-.game { display: none; }
-.active { display: block; }
+.container {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  width: 320px;
+  margin: 40px auto;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.balance {
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.slots {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
 
 .slot {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
+  margin: 5px;
+  font-size: 35px;
   background: black;
+  border-radius: 10px;
   border: 2px solid gold;
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 30px;
-  margin: 5px;
+  transition: 0.2s;
+}
+
+.glow {
+  box-shadow: 0 0 20px gold;
+}
+
+input {
+  width: 80%;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  margin-top: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background: linear-gradient(45deg, gold, orange);
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#result {
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: bold;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎰 Casino</h1>
-<h3>Balance: $<span id="balance">200</span></h3>
+<h1>🔥 77 Casino Game</h1>
 
-<div class="tabs">
-  <button onclick="showGame('slot')">Slot</button>
-  <button onclick="showGame('dice')">Dice</button>
-</div>
+<div class="container">
+  <div class="balance">Balance: $<span id="balance">300</span></div>
 
-<!-- SLOT -->
-<div id="slot" class="game active">
-  <div>
+  <div class="slots">
     <div class="slot" id="s1">7</div>
     <div class="slot" id="s2">7</div>
     <div class="slot" id="s3">7</div>
   </div>
 
-  Bet: <input id="slotBet" type="number" value="10"><br>
-  <button onclick="spin()">SPIN</button>
-  <p id="slotResult"></p>
-</div>
+  Bet: <input type="number" id="bet" value="20">
 
-<!-- DICE -->
-<div id="dice" class="game">
-  Bet: <input id="diceBet" type="number" value="10"><br>
-  Guess (1-6): <input id="guess" type="number"><br>
-  <button onclick="rollDice()">ROLL</button>
-  <p id="diceResult"></p>
+  <button onclick="play()">PLAY</button>
+
+  <div id="result"></div>
 </div>
 
 <script>
-let balance = 200;
+let balance = 300;
 const symbols = ["7","🍒","🍋","⭐","💎"];
 
 function updateBalance(){
   document.getElementById("balance").innerText = balance;
 }
 
-function showGame(id){
-  document.querySelectorAll(".game").forEach(g=>g.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-// SLOT
-function spin(){
-  let bet = parseInt(document.getElementById("slotBet").value) || 0;
+function play(){
+  let bet = parseInt(document.getElementById("bet").value) || 0;
 
   if(bet <= 0) return alert("Enter valid bet");
   if(bet > balance) return alert("Not enough balance");
 
   balance -= bet;
+  updateBalance();
 
-  let s1 = symbols[Math.floor(Math.random()*symbols.length)];
-  let s2 = symbols[Math.floor(Math.random()*symbols.length)];
-  let s3 = symbols[Math.floor(Math.random()*symbols.length)];
+  let slots = [
+    symbols[Math.floor(Math.random()*symbols.length)],
+    symbols[Math.floor(Math.random()*symbols.length)],
+    symbols[Math.floor(Math.random()*symbols.length)]
+  ];
 
-  document.getElementById("s1").innerText = s1;
-  document.getElementById("s2").innerText = s2;
-  document.getElementById("s3").innerText = s3;
+  // animation
+  let i = 0;
+  let spin = setInterval(()=>{
+    document.getElementById("s1").innerText = symbols[Math.floor(Math.random()*symbols.length)];
+    document.getElementById("s2").innerText = symbols[Math.floor(Math.random()*symbols.length)];
+    document.getElementById("s3").innerText = symbols[Math.floor(Math.random()*symbols.length)];
 
-  let result = "";
+    i++;
+    if(i>8){
+      clearInterval(spin);
+      finish(slots, bet);
+    }
+  },100);
+}
 
-  if(s1===s2 && s2===s3){
-    balance += bet*3;
-    result = "Win 🎉";
-  } else {
-    result = "Lose 😢";
+function finish(slots, bet){
+  let [a,b,c] = slots;
+
+  document.getElementById("s1").innerText = a;
+  document.getElementById("s2").innerText = b;
+  document.getElementById("s3").innerText = c;
+
+  document.querySelectorAll(".slot").forEach(s=>s.classList.remove("glow"));
+
+  let count7 = [a,b,c].filter(x=>x==="7").length;
+  let resultText = "";
+
+  if(count7 === 3){
+    balance += bet * 10;
+    resultText = "🔥 JACKPOT (777)";
+    glowAll();
+  }
+  else if(count7 === 2){
+    balance += bet * 4;
+    resultText = "🎉 77 WIN!";
+    glowTwo(a,b,c);
+  }
+  else{
+    resultText = "😢 Lose";
   }
 
-  document.getElementById("slotResult").innerText = result;
+  document.getElementById("result").innerText = resultText;
   updateBalance();
 }
 
-// DICE
-function rollDice(){
-  let bet = parseInt(document.getElementById("diceBet").value) || 0;
-  let guess = parseInt(document.getElementById("guess").value);
+function glowAll(){
+  document.querySelectorAll(".slot").forEach(s=>s.classList.add("glow"));
+}
 
-  if(bet <= 0) return alert("Enter valid bet");
-  if(bet > balance) return alert("Not enough balance");
-  if(!guess || guess<1 || guess>6) return alert("Enter 1-6");
-
-  balance -= bet;
-
-  let dice = Math.floor(Math.random()*6)+1;
-
-  let result = "";
-
-  if(dice === guess){
-    balance += bet*5;
-    result = "Win 🎉 Dice: " + dice;
-  } else {
-    result = "Lose 😢 Dice: " + dice;
-  }
-
-  document.getElementById("diceResult").innerText = result;
-  updateBalance();
+function glowTwo(a,b,c){
+  let slots = [a,b,c];
+  slots.forEach((val,i)=>{
+    if(val==="7"){
+      document.getElementById("s"+(i+1)).classList.add("glow");
+    }
+  });
 }
 </script>
 
 </body>
 </html>
-
