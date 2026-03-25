@@ -2,234 +2,144 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Premium Casino Pro</title>
+<title>Casino Fixed</title>
 
 <style>
 body {
-  margin: 0;
-  font-family: 'Segoe UI';
-  background: radial-gradient(circle, #1a2a33, #0f1720);
+  font-family: Arial;
+  background: #0f1720;
   color: white;
   text-align: center;
 }
 
-header {
-  background: #111;
-  padding: 15px;
-  box-shadow: 0 0 10px black;
-}
-
-h1 {
-  color: gold;
-}
-
-.balance {
-  font-size: 18px;
-  margin-top: 5px;
-}
+h1 { color: gold; }
 
 .tabs button {
-  padding: 10px 25px;
-  margin: 10px;
-  border: none;
-  background: linear-gradient(45deg, gold, orange);
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.game {
-  display: none;
-  padding: 20px;
-}
-
-.active {
-  display: block;
-}
-
-.card {
-  background: #16222a;
-  padding: 20px;
-  margin: auto;
-  width: 300px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px black;
-}
-
-.slot-box {
-  display: flex;
-  justify-content: center;
-}
-
-.slot {
-  width: 70px;
-  height: 70px;
-  margin: 5px;
-  background: black;
-  border: 2px solid gold;
-  font-size: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-button.play {
-  margin-top: 10px;
   padding: 10px;
+  margin: 5px;
   background: gold;
   border: none;
   cursor: pointer;
-  width: 100%;
 }
 
-input {
-  width: 80%;
-  padding: 5px;
+.game { display: none; }
+.active { display: block; }
+
+.slot {
+  width: 60px;
+  height: 60px;
+  background: black;
+  border: 2px solid gold;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
   margin: 5px;
 }
-
-.history {
-  margin-top: 10px;
-  font-size: 12px;
-  max-height: 100px;
-  overflow-y: auto;
-  text-align: left;
-}
 </style>
-
 </head>
 
 <body>
 
-<header>
-  <h1>🎰 Casino Pro</h1>
-  <div class="balance">Balance: $<span id="balance">500</span></div>
-</header>
+<h1>🎰 Casino</h1>
+<h3>Balance: $<span id="balance">200</span></h3>
 
 <div class="tabs">
-  <button onclick="showGame('slot')">🎰 Slot</button>
-  <button onclick="showGame('dice')">🎲 Dice</button>
+  <button onclick="showGame('slot')">Slot</button>
+  <button onclick="showGame('dice')">Dice</button>
 </div>
 
-<!-- SLOT GAME -->
+<!-- SLOT -->
 <div id="slot" class="game active">
-  <div class="card">
-    <h2>777 Slot Machine</h2>
-
-    <div class="slot-box">
-      <div class="slot" id="s1">7</div>
-      <div class="slot" id="s2">7</div>
-      <div class="slot" id="s3">7</div>
-    </div>
-
-    Bet: <input type="number" id="slotBet" value="20">
-
-    <button class="play" onclick="spin()">SPIN</button>
-
-    <p id="slotResult"></p>
+  <div>
+    <div class="slot" id="s1">7</div>
+    <div class="slot" id="s2">7</div>
+    <div class="slot" id="s3">7</div>
   </div>
+
+  Bet: <input id="slotBet" type="number" value="10"><br>
+  <button onclick="spin()">SPIN</button>
+  <p id="slotResult"></p>
 </div>
 
-<!-- DICE GAME -->
+<!-- DICE -->
 <div id="dice" class="game">
-  <div class="card">
-    <h2>Dice Game</h2>
-
-    Bet: <input type="number" id="diceBet" value="20"><br>
-    Guess (1-6): <input type="number" id="guess"><br>
-
-    <button class="play" onclick="rollDice()">ROLL</button>
-
-    <p id="diceResult"></p>
-
-    <div class="history" id="history"></div>
-  </div>
+  Bet: <input id="diceBet" type="number" value="10"><br>
+  Guess (1-6): <input id="guess" type="number"><br>
+  <button onclick="rollDice()">ROLL</button>
+  <p id="diceResult"></p>
 </div>
 
 <script>
-let balance = 500;
+let balance = 200;
 const symbols = ["7","🍒","🍋","⭐","💎"];
 
-function updateBalance() {
+function updateBalance(){
   document.getElementById("balance").innerText = balance;
 }
 
-function showGame(game) {
-  document.querySelectorAll(".game").forEach(g => g.classList.remove("active"));
-  document.getElementById(game).classList.add("active");
+function showGame(id){
+  document.querySelectorAll(".game").forEach(g=>g.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
-// SLOT ANIMATION
-function spin() {
-  let bet = parseInt(document.getElementById("slotBet").value);
-  if (bet > balance) return alert("Not enough balance");
+// SLOT
+function spin(){
+  let bet = parseInt(document.getElementById("slotBet").value) || 0;
+
+  if(bet <= 0) return alert("Enter valid bet");
+  if(bet > balance) return alert("Not enough balance");
 
   balance -= bet;
-  updateBalance();
 
-  let count = 0;
-  let interval = setInterval(() => {
-    document.getElementById("s1").innerText = symbols[Math.floor(Math.random()*symbols.length)];
-    document.getElementById("s2").innerText = symbols[Math.floor(Math.random()*symbols.length)];
-    document.getElementById("s3").innerText = symbols[Math.floor(Math.random()*symbols.length)];
+  let s1 = symbols[Math.floor(Math.random()*symbols.length)];
+  let s2 = symbols[Math.floor(Math.random()*symbols.length)];
+  let s3 = symbols[Math.floor(Math.random()*symbols.length)];
 
-    count++;
-    if (count > 10) {
-      clearInterval(interval);
-      finishSpin(bet);
-    }
-  }, 100);
-}
+  document.getElementById("s1").innerText = s1;
+  document.getElementById("s2").innerText = s2;
+  document.getElementById("s3").innerText = s3;
 
-function finishSpin(bet) {
-  let s1 = document.getElementById("s1").innerText;
-  let s2 = document.getElementById("s2").innerText;
-  let s3 = document.getElementById("s3").innerText;
+  let result = "";
 
-  let result = document.getElementById("slotResult");
-
-  if (s1==="7" && s2==="7" && s3==="7") {
-    balance += bet * 10;
-    result.innerText = "🔥 JACKPOT!";
-  } else if (s1===s2 && s2===s3) {
-    balance += bet * 3;
-    result.innerText = "🎉 Win!";
+  if(s1===s2 && s2===s3){
+    balance += bet*3;
+    result = "Win 🎉";
   } else {
-    result.innerText = "😢 Lost!";
+    result = "Lose 😢";
   }
 
+  document.getElementById("slotResult").innerText = result;
   updateBalance();
 }
 
-// DICE GAME
-function rollDice() {
-  let bet = parseInt(document.getElementById("diceBet").value);
+// DICE
+function rollDice(){
+  let bet = parseInt(document.getElementById("diceBet").value) || 0;
   let guess = parseInt(document.getElementById("guess").value);
 
-  if (bet > balance) return alert("Not enough balance");
-  if (guess<1 || guess>6) return alert("Enter 1-6");
+  if(bet <= 0) return alert("Enter valid bet");
+  if(bet > balance) return alert("Not enough balance");
+  if(!guess || guess<1 || guess>6) return alert("Enter 1-6");
 
   balance -= bet;
 
   let dice = Math.floor(Math.random()*6)+1;
+
   let result = "";
 
-  if (dice === guess) {
-    balance += bet * 5;
+  if(dice === guess){
+    balance += bet*5;
     result = "Win 🎉 Dice: " + dice;
   } else {
     result = "Lose 😢 Dice: " + dice;
   }
 
   document.getElementById("diceResult").innerText = result;
-
-  // history add
-  let history = document.getElementById("history");
-  history.innerHTML = result + "<br>" + history.innerHTML;
-
   updateBalance();
 }
 </script>
 
 </body>
 </html>
+
