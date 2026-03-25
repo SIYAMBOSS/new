@@ -1,95 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>77 Casino Game</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: 'Segoe UI';
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: white;
-  text-align: center;
-}
-
-h1 {
-  color: gold;
-  margin-top: 20px;
-}
-
-.container {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-  padding: 30px;
-  width: 320px;
-  margin: 40px auto;
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
-}
-
-.balance {
-  margin-bottom: 15px;
-  font-size: 18px;
-}
-
-.slots {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-.slot {
-  width: 70px;
-  height: 70px;
-  margin: 5px;
-  font-size: 35px;
-  background: black;
-  border-radius: 10px;
-  border: 2px solid gold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.2s;
-}
-
-.glow {
-  box-shadow: 0 0 20px gold;
-}
-
-input {
-  width: 80%;
-  padding: 8px;
-  border-radius: 5px;
-  border: none;
-  margin-top: 10px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background: linear-gradient(45deg, gold, orange);
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-#result {
-  margin-top: 15px;
-  font-size: 18px;
-  font-weight: bold;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>77 Casino Game</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>🔥 77 Casino Game</h1>
+<h1>🔥 77 Casino</h1>
 
-<div class="container">
+<div class="card">
   <div class="balance">Balance: $<span id="balance">300</span></div>
 
   <div class="slots">
@@ -98,94 +19,12 @@ button {
     <div class="slot" id="s3">7</div>
   </div>
 
-  Bet: <input type="number" id="bet" value="20">
-
+  <input type="number" id="bet" value="20">
   <button onclick="play()">PLAY</button>
 
   <div id="result"></div>
 </div>
 
-<script>
-let balance = 300;
-const symbols = ["7","🍒","🍋","⭐","💎"];
-
-function updateBalance(){
-  document.getElementById("balance").innerText = balance;
-}
-
-function play(){
-  let bet = parseInt(document.getElementById("bet").value) || 0;
-
-  if(bet <= 0) return alert("Enter valid bet");
-  if(bet > balance) return alert("Not enough balance");
-
-  balance -= bet;
-  updateBalance();
-
-  let slots = [
-    symbols[Math.floor(Math.random()*symbols.length)],
-    symbols[Math.floor(Math.random()*symbols.length)],
-    symbols[Math.floor(Math.random()*symbols.length)]
-  ];
-
-  // animation
-  let i = 0;
-  let spin = setInterval(()=>{
-    document.getElementById("s1").innerText = symbols[Math.floor(Math.random()*symbols.length)];
-    document.getElementById("s2").innerText = symbols[Math.floor(Math.random()*symbols.length)];
-    document.getElementById("s3").innerText = symbols[Math.floor(Math.random()*symbols.length)];
-
-    i++;
-    if(i>8){
-      clearInterval(spin);
-      finish(slots, bet);
-    }
-  },100);
-}
-
-function finish(slots, bet){
-  let [a,b,c] = slots;
-
-  document.getElementById("s1").innerText = a;
-  document.getElementById("s2").innerText = b;
-  document.getElementById("s3").innerText = c;
-
-  document.querySelectorAll(".slot").forEach(s=>s.classList.remove("glow"));
-
-  let count7 = [a,b,c].filter(x=>x==="7").length;
-  let resultText = "";
-
-  if(count7 === 3){
-    balance += bet * 10;
-    resultText = "🔥 JACKPOT (777)";
-    glowAll();
-  }
-  else if(count7 === 2){
-    balance += bet * 4;
-    resultText = "🎉 77 WIN!";
-    glowTwo(a,b,c);
-  }
-  else{
-    resultText = "😢 Lose";
-  }
-
-  document.getElementById("result").innerText = resultText;
-  updateBalance();
-}
-
-function glowAll(){
-  document.querySelectorAll(".slot").forEach(s=>s.classList.add("glow"));
-}
-
-function glowTwo(a,b,c){
-  let slots = [a,b,c];
-  slots.forEach((val,i)=>{
-    if(val==="7"){
-      document.getElementById("s"+(i+1)).classList.add("glow");
-    }
-  });
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
